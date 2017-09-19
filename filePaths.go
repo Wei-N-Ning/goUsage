@@ -1,5 +1,0 @@
-package goUsage
-
-
-func DoSome() {
-}
