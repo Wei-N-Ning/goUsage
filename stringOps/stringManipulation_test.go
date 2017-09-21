@@ -21,4 +21,3 @@ func TestIdentifyNumericCharacter(t *testing.T) {
 		t.Error("not expected")
 	}
 }
-

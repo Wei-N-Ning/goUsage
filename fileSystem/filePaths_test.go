@@ -3,6 +3,7 @@ package fileSystem
 import (
 	"testing"
 	"os"
+	"io/ioutil"
 )
 
 
@@ -19,6 +20,16 @@ func TestCheckFileSystemEntityExists(t *testing.T) {
 		t.Error("not expected")
 	}
 	if Exists("/cygdrive/c") {
+		t.Error("not expected")
+	}
+}
+
+
+func TestGetContentsFromDirectory(t *testing.T) {
+	fInfoA, _ := ioutil.ReadDir("/tmp")
+	//for _, fInfo := range fInfoA {
+	//}
+	if len(fInfoA) == 0 {
 		t.Error("not expected")
 	}
 }
