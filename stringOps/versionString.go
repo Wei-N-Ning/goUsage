@@ -1,6 +1,8 @@
 package stringOps
 
-import "fmt"
+import (
+	"fmt"
+)
 
 
 type VersionString interface {
@@ -16,10 +18,6 @@ type SemanticVersion struct {
 	patch uint
 }
 
-
-func (v SemanticVersion) ToStr() string {
-	return fmt.Sprintf("%d.%d.%d", v.major, v.minor, v.patch)
-}
 
 
 func (v SemanticVersion) ToInts() [3]uint {
@@ -37,3 +35,22 @@ func (v SemanticVersion) IsValid() bool {
 	}
 	return true
 }
+
+
+func (v SemanticVersion) ToStr() string {
+	if !v.IsValid() {
+		return ""
+	}
+	return fmt.Sprintf("%d.%d.%d", v.major, v.minor, v.patch)
+}
+
+
+func CreateSemanticVersionFromNums(nums [3]uint) SemanticVersion {
+	v := SemanticVersion{}
+	v.major = nums[0]
+	v.minor = nums[1]
+	v.patch = nums[2]
+	return v
+}
+
+

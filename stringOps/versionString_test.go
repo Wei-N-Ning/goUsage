@@ -1,11 +1,14 @@
 package stringOps
 
-import "testing"
+import (
+	"testing"
+	"fmt"
+)
 
 
 func TestSemanticVersion_ToStr_ZeroValue(t *testing.T) {
 	v := SemanticVersion{}
-	if "0.0.0" != v.ToStr() {
+	if "" != v.ToStr() {
 		t.Error("not expected")
 	}
 	if v.IsValid() {
@@ -48,3 +51,21 @@ func TestSemanticVersion_ToInts(t *testing.T) {
 }
 
 
+// table based test
+func TestCreateSemanticVersionFromNums(t *testing.T) {
+	var testCases = []struct {
+		nums [3]uint
+		expectedStr string
+	} {
+		{[3]uint{0, 0, 0}, ""},
+		{[3]uint{1, 0, 0}, "1.0.0"},
+		{[3]uint{0, 2, 0}, "0.2.0"},
+	}
+	for _, testCase := range testCases {
+		sv := CreateSemanticVersionFromNums(testCase.nums)
+		s := sv.ToStr()
+		if testCase.expectedStr != s {
+			t.Error(fmt.Sprintf("Expect: %s; Got %s", testCase.expectedStr, s))
+		}
+	}
+}
