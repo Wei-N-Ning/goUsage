@@ -182,3 +182,180 @@ func TestFindSubStringInString(t *testing.T) {
 }
 
 
+func TestFindSubStringInStringPredicate(t *testing.T) {
+	var testCases = []struct {
+		ss string
+		expected int
+	} {
+		{">>. as24j. a2", 6},
+	}
+	predicate := func(c rune) bool {
+		return unicode.IsNumber(c)
+	}
+	for _, tc := range testCases {
+		result := strings.IndexFunc(tc.ss, predicate)
+		if tc.expected != result {
+			t.Error(fmt.Sprintf("%v, %+v", result, tc))
+		}
+	}
+}
+
+
+func TestIndexAny(t *testing.T) {
+	var testCases = []struct {
+		sub string
+		ss string
+		expected int
+	} {
+		{"sa ow", "thereisacow", 6},  // ow is omitted
+	}
+	for _, tc := range testCases {
+		result := strings.IndexAny(tc.ss, tc.sub)
+		if tc.expected != result {
+			t.Error()
+		}
+	}
+}
+
+
+func TestIndexByte(t *testing.T) {
+	var testCases = []struct {
+		chr byte
+		ss string
+		expected int
+	} {
+		{'d', "ret", -1},
+	}
+	for _, tc := range testCases {
+		result := strings.IndexByte(tc.ss, tc.chr)  // see also IndexRune()
+		if tc.expected != result {
+			t.Error()
+		}
+	}
+}
+
+
+func TestLastIndex(t *testing.T) {
+	var testCases = []struct {
+		ss string
+		sub string
+		expected int
+	} {
+		{"123 2421 12421 12", "12", 15},
+		{"123 2421 12421 12", "13", -1},
+	}
+	for _, tc := range testCases {
+		result := strings.LastIndex(tc.ss, tc.sub)  // see also LastIndexAny()
+		if tc.expected != result {
+			t.Error()
+		}
+	}
+}
+
+
+func TestStringJoin(t *testing.T) {
+	var testCases = []struct {
+		tokens []string
+		expected string
+	} {
+		{[]string{" ", "1", " "}, " 1 "},
+	}
+	for _, tc := range testCases {
+		result := strings.Join(tc.tokens, "")
+		if tc.expected != result {
+			t.Error()
+		}
+	}
+}
+
+
+func TestStringRepeat(t *testing.T) {
+	var testCases = []struct {
+		ss string
+		count int
+		expected string
+	} {
+		{"doom",3, "doomdoomdoom"},
+	}
+	for _, tc := range testCases {
+		result := strings.Repeat(tc.ss, tc.count)
+		if tc.expected != result {
+			t.Error()
+		}
+	}
+}
+
+
+func TestStringReplace(t *testing.T) {
+	var testCases = []struct {
+		ss string
+		subOld string
+		subNew string
+		numOps int
+		expected string
+	} {
+		{"doom", "oo", "OO", -1, "dOOm"},
+		{"doom", "o", "O", 1, "dOom"},
+	}
+	for _, tc := range testCases {
+		// note: in Go 1.8, this function has been factored to two: Replace() and ReplaceN()
+		result := strings.Replace(tc.ss, tc.subOld, tc.subNew, tc.numOps)
+		if tc.expected != result {
+			t.Error()
+		}
+	}
+}
+
+
+func TestStringSplit(t *testing.T) {
+	var testCases = []struct {
+		ss string
+		sep string
+		expected []string
+	} {
+		{"/doom/e1/m1", "/", []string{"", "doom", "e1", "m1"}},
+	}
+	for _, tc := range testCases {
+		result := strings.Split(tc.ss, tc.sep)
+		if !(4 == len(result) && "" == result[0]) {
+			t.Error()
+		}
+	}
+}
+
+
+func TestTitle(t *testing.T) {
+	var testCases = []struct {
+		orig string
+		expected string
+	} {
+		{"doom", "Doom"},
+		{"...asd", "...Asd"},  // this is a bug
+		{"111asd", "111asd"},
+	}
+	for _, tc := range testCases {
+		result := strings.Title(tc.orig)
+		if tc.expected != result {
+			t.Error(fmt.Sprintf("result: %v, %+v", result, tc))
+		}
+	}
+}
+
+
+func TestTrim(t *testing.T) {
+	var testCases = []struct {
+		ss string
+		cutset string
+		expected string
+	} {
+		{"* /doom/e1/m1/map: *", "* :","/doom/e1/m1/map"},
+	}
+	for _, tc := range testCases {
+		result := strings.Trim(tc.ss, tc.cutset)
+		if tc.expected != result {
+			t.Error(fmt.Sprintf("result: %v, %+v", result, tc))
+		}
+	}
+}
+
+
