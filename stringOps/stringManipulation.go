@@ -13,7 +13,11 @@ func IsUpper(someStr string) bool {
 	return false
 }
 
+/*
+Alternative implementation for rune type
 
+unicode.IsNumber(c)
+ */
 func IsDigit(someStr string) bool {
 	if _, err := strconv.Atoi(someStr); err == nil {
 		return true
