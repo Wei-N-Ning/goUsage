@@ -162,3 +162,23 @@ func TestStringStartswith(t *testing.T) {
 	}
 }
 
+
+func TestFindSubStringInString(t *testing.T) {
+	var testCases = []struct {
+		sub string
+		ss string
+		expected int
+	} {
+		{"", "", 0},
+		{"asdasd", "", -1},
+		{"ni", "selenium", 4},
+	}
+	for _, tc := range testCases {
+		result := strings.Index(tc.ss, tc.sub)
+		if tc.expected != result {
+			t.Error(fmt.Sprintf("result: %v, test case: %+v", result, tc))
+		}
+	}
+}
+
+
