@@ -1,5 +1,7 @@
 package OOProgramming
 
+import "math"
+
 type PointI interface {
 	distanceTo(PointI) float64
 }
@@ -17,5 +19,8 @@ type Point struct {
 }
 
 func (p Point) distanceTo(other Point) float64 {
-	return 0.0
+	x := other.x - p.x
+	y := other.y - p.y
+	z := other.z - p.z
+	return math.Sqrt(x * x + y * y + z * z)
 }
