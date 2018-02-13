@@ -1,4 +1,4 @@
-package subProcess
+package multiprocess
 
 import (
 	"testing"

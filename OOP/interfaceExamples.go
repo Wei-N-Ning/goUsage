@@ -1,4 +1,4 @@
-package OOProgramming
+package OOP
 
 import "math"
 

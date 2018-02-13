@@ -1,4 +1,4 @@
-package stringOps
+package strings
 
 
 type PackageName struct {

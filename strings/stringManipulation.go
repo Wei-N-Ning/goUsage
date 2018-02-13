@@ -1,4 +1,4 @@
-package stringOps
+package strings
 
 import (
 	"strings"

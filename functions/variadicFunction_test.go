@@ -1,4 +1,4 @@
-package functionDesign
+package functions
 
 import (
 	"testing"
