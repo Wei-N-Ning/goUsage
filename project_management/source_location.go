@@ -1,4 +1,4 @@
-package projectManagement
+package project_management
 
 import "runtime"
 

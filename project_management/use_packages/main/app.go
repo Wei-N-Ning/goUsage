@@ -12,7 +12,7 @@ import "github.com/powergun/goUsage/fileSystem"
 
 func main() {
 	filePath := "/tmp/test"
-	if fileSystem.Exists(filePath) {
+	if file_system.Exists(filePath) {
 		fmt.Println("file exists!")
 	} else {
 		fmt.Println("file does not exist")

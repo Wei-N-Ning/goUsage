@@ -1,6 +1,6 @@
 // https://gobyexample.com/reading-files
 
-package fileIO
+package file_io
 
 import (
 	"testing"

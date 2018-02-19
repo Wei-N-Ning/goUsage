@@ -1,4 +1,4 @@
-package fileIO
+package file_io
 
 import "testing"
 import (
