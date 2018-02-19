@@ -1,4 +1,4 @@
-package testsWriting
+package testing_
 
 
 func Check(e error) {

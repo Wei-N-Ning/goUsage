@@ -1,4 +1,4 @@
-package testsWriting
+package testing_
 
 import "testing"
 import "github.com/stretchr/testify/assert"

@@ -2,9 +2,9 @@ package fileIO
 
 import (
 	"testing"
+	"github.com/powergun/goUsage/testing_"
 	"os"
 	"bufio"
-	"github.com/powergun/goUsage/testsWriting"
 	"strings"
 )
 
@@ -12,7 +12,7 @@ import (
 func TestReadLineFromFile(t *testing.T) {
 	filePath := resourcePath("aliases")
 	f, err := os.Open(filePath)
-	testsWriting.Check(err)
+	testing_.Check(err)
 	scanner := bufio.NewScanner(f)
 	numAlias := 0
 	for scanner.Scan() {

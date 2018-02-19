@@ -19,6 +19,11 @@ type SemanticVersion struct {
 }
 
 
+func CreateSemanticVersion(s string) SemanticVersion {
+	sv := SemanticVersion{}
+	return sv
+}
+
 
 func (v SemanticVersion) ToInts() [3]uint {
 	var nums [3]uint

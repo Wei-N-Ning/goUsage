@@ -3,7 +3,18 @@ package strings
 import (
 	"testing"
 	"fmt"
+	"github.com/smartystreets/gunit"
 )
+
+
+type TestVersionStringFixture struct {
+	*gunit.Fixture
+}
+
+
+func (this *TestVersionStringFixture) TestCreateFromStringExpectVersionNums() {
+	this.Assert(true)
+}
 
 
 func TestSemanticVersion_ToStr_ZeroValue(t *testing.T) {
