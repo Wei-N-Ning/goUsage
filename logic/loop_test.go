@@ -16,6 +16,12 @@ func (this *ForLoopFixture) TestRangeBasedFor() {
 	}
 }
 
+func (this *ForLoopFixture) TestIndexBasedFor() {
+	for i:=1; i < 10; i++ {
+		i += 1
+	}
+}
+
 func TestForLoopFixture(t *testing.T) {
 	gunit.Run(new(ForLoopFixture), t)
 }
