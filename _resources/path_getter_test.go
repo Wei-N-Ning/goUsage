@@ -2,7 +2,7 @@ package _resources
 
 import (
 	"testing"
-	"github.com/powergun/goUsage/fileSystem"
+	"github.com/powergun/goUsage/file_system"
 )
 
 
