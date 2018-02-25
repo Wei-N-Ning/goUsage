@@ -27,12 +27,24 @@ func newParser(line string) (*parser, bool) {
 	if len(tokens) == 0{
 		return nil, false
 	}
+	defaultMap := map[string]string{
+		"Id": "",
+		"Address": "",
+		"Subroutine": "",
+		"Arguments": "",
+		"BinaryFile": "",
+		"BinaryName": "",
+		"SourceFile": "",
+		"SourceName": "",
+		"SourceLineNumber": "",
+
+	}
 	p := parser{
 		line: line,
 		tokens: tokens,
 		currentIndex: 0,
 		lastIndex: len(tokens) - 1,
-		m: make(map[string]string),
+		m: defaultMap,
 	}
 	return &p, true
 }
@@ -69,7 +81,8 @@ func (this *parser) findId() error {
 	return nil
 }
 
-// three scenarios can happen:
+// these scenarios can happen:
+// <...>
 // ?? (...)
 // call_function (...)
 // address in something (...)
@@ -83,28 +96,65 @@ func (this *parser) findAddress() {
 	this.m["Address"] = addr
 }
 
+// these exceptional (but acceptable) cases can happen:
+// #2 <something something>
 func (this *parser) findSubroutine() error {
-	err := this.skipToken("in")
+	err := this.skipToken("")
 	if err != nil {
 		return err
 	}
-	re := regexp.MustCompile(`\?\?|[^ ]+`)
+
+	if strings.HasPrefix(this.currentToken(), "<") {
+		// #2 <....>, fast-forward to the end
+		this.currentIndex = this.lastIndex + 1
+		return nil
+	}
+
+	err = this.skipToken("in")
+	if err != nil {
+		return err
+	}
+
+	re := regexp.MustCompile(`^\?\?$|^[^ (]+$`)
 	token := this.currentToken()
 	if re.MatchString(token) {
 		this.m["Subroutine"] = token
 		this.currentIndex++
 		return nil
 	}
+
+	if strings.Contains(token, "(") {
+		ctors := make([]string, 0)
+		for {
+			t := this.currentToken()
+			ctors = append(ctors, t)
+			if strings.HasSuffix(t, ")") {
+				this.m["Subroutine"] = strings.Join(ctors, "")
+				this.currentIndex++
+				return nil
+			}
+			this.currentIndex++
+			if this.currentIndex > this.lastIndex {
+				return errors.New("unclosed ( found in subroutine")
+			}
+		}
+	}
+
 	return errors.New("can not find subroutine")
 }
 
 func (this *parser) findArguments() error {
+	if this.currentIndex > this.lastIndex {
+		return nil
+	}
+
 	token := this.currentToken()
 	if regexp.MustCompile(`\(.*\)`).MatchString(token) {
 		this.m["Arguments"] = token
 		this.currentIndex++
 		return nil
 	}
+
 	args := make([]string, 1)
 	if strings.HasPrefix(token, "(") {
 		args = append(args, token)

@@ -50,6 +50,10 @@ func TestEmptyLine(t *testing.T) {
 	assertEmptyLine("     \n")
 }
 
+func TestHasNoSubroutineInfo(t *testing.T) {
+	parseAndAssert(t, "#2 <signal handler called>", "Id", "2")
+}
+
 func TestCaptureId(t *testing.T) {
 	parseAndAssert(t, "#0 ?? ()", "Id", "0")
 	parseAndAssert(t, " asd #0 23 ?? ()", "Id", "0")
@@ -70,6 +74,32 @@ func TestCaptureSubroutine(t *testing.T) {
 	parseAndAssert(t, "#0  m4_traceon (obs=0x24e)", "Subroutine", "m4_traceon")
 	parseAndAssert(t, "#1  0x68 in expand_macro (sym=0x2b) at mo.c:242", "Subroutine", "expand_macro")
 	parseAndAssert(t, "#2  0x40 in expand_token (obs=0x0, t=17, tdxb08)", "Subroutine", "expand_token")
+}
+
+func TestCaptureSubroutineWithNamespace(t *testing.T) {
+	parseAndAssert(t, "#0 SomeModule::SomeClass::someMeth ()",
+		"Subroutine", "SomeModule::SomeClass::someMeth")
+}
+
+func TestCaptureSubroutineWithCTOR(t *testing.T) {
+	parseAndAssert(t, "#4  0x00007fdef42ddbcd in IlmThread_2_2::Semaphore::wait() () from /usr/lib/x86_64-linux-gnu/libIlmThread-2_2.so.12",
+		"Subroutine", "IlmThread_2_2::Semaphore::wait()")
+
+	// excessive space:
+	// expect subroutine and arguments are handled properly
+	parseAndAssert(t, "#4  0x00007fdef42ddbcd in IlmThread_2_2::Semaphore::wait () () from /usr/lib/x86_64-linux-gnu/libIlmThread-2_2.so.12",
+		"Subroutine", "IlmThread_2_2::Semaphore::wait")
+	parseAndAssert(t, "#4  0x00007fdef42ddbcd in IlmThread_2_2::Semaphore::wait () () from /usr/lib/x86_64-linux-gnu/libIlmThread-2_2.so.12",
+		"Arguments", "()")
+}
+
+func TestCaptureSubroutineWithCTORParameters(t *testing.T) {
+	parseAndAssert(t, "#0 SomeModule::SomeClass::someMeth(int, sig, *void)",
+		"Subroutine", "SomeModule::SomeClass::someMeth(int,sig,*void)")
+
+	// excessive space:
+	parseAndAssert(t, "#0 SomeModule::SomeClass::someMeth(int,   sig=asd,    *void) (asd asd)",
+		"Subroutine", "SomeModule::SomeClass::someMeth(int,sig=asd,*void)")
 }
 
 func TestCaptureArguments(t *testing.T) {
@@ -118,7 +148,7 @@ func TestBlenderBackTrace(t *testing.T) {
 			if len(m) == 0 {
 				t.Log(line)
 			}
-			t.Log(m)
+			//t.Log(m)
 		}
 		return nil
 	}
