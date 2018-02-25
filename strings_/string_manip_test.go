@@ -2,7 +2,6 @@ package strings_
 
 import "testing"
 
-
 func TestIdentifyUppercase(t *testing.T) {
 	if !IsUpper("S") {
 		t.Error("not expected")
@@ -11,7 +10,6 @@ func TestIdentifyUppercase(t *testing.T) {
 		t.Error("not expected")
 	}
 }
-
 
 func TestIdentifyNumericCharacter(t *testing.T) {
 	if !IsDigit("1234") {

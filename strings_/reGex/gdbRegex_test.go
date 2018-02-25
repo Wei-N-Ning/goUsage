@@ -97,11 +97,11 @@ func TestCaptureBinaryFile(t *testing.T) {
 
 func TestCaptureSourceFile(t *testing.T) {
 	parseAndAssert(t, "#6  0x00007fdefb83c6ba in start_thread (arg=0x7fded47f8700) at pthread_create.c:333",
-		"SourceFile", "pthread_create.c:333")
+		"SourceFile", "pthread_create.c")
 	parseAndAssert(t, "#0  0x00007fdefb844827 in futex_abstimed_wait_cancelable (private=0, abstime=0x0,  expected=0, futex_word=0x7fded989c3c8) at ../sysdeps/unix/sysv/linux/futex-internal.h:205",
-		"SourceFile", "../sysdeps/unix/sysv/linux/futex-internal.h:205")
+		"SourceFile", "../sysdeps/unix/sysv/linux/futex-internal.h")
 	parseAndAssert(t, "#2  0x00007fdefb8448d4 in __new_sem_wait_slow (sem=0x7fded989c3c8, abstime=0x0) at sem_waitcommon.c:181",
-		"SourceFile", "sem_waitcommon.c:181")
+		"SourceFile", "sem_waitcommon.c")
 }
 
 func TestBlenderBackTrace(t *testing.T) {
@@ -118,6 +118,7 @@ func TestBlenderBackTrace(t *testing.T) {
 			if len(m) == 0 {
 				t.Log(line)
 			}
+			t.Log(m)
 		}
 		return nil
 	}

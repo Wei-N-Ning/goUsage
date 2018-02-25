@@ -4,6 +4,7 @@ import (
 	"strings"
 	"errors"
 	"regexp"
+	"path"
 )
 
 type parser struct {
@@ -12,6 +13,7 @@ type parser struct {
 	currentIndex int
 	lastIndex    int
 	// Id, Address, Subroutine, Arguments, BinaryFile, SourceFile
+	// BinaryName, SourceName, SourceLineNumber
 	m            map[string]string
 }
 
@@ -136,30 +138,44 @@ func (this *parser) findBinaryOrSource() {
 		token := this.currentToken()
 		if token == "from" {
 			this.currentIndex++
-			this.m["BinaryFile"] = this.binaryFilePath()
+			this.populateBinaryFileFields()
 			return
 		}
 		if token == "at" {
 			this.currentIndex++
-			this.m["SourceFile"] = this.sourceFilePath()
+			this.populateSourceFileFields()
 			return
 		}
 		this.currentIndex++
 	}
 }
 
-func (this *parser) binaryFilePath() string {
+func (this *parser) populateBinaryFileFields() {
 	if this.currentIndex > this.lastIndex {
-		return ""
+		return
 	}
-	return this.currentToken()
+	filePath := this.currentToken()
+	this.m["BinaryFile"] = filePath
+	this.m["BinaryName"] = path.Base(filePath)
 }
 
-func (this *parser) sourceFilePath() string {
+func (this *parser) populateSourceFileFields() {
 	if this.currentIndex > this.lastIndex {
-		return ""
+		return
 	}
-	return this.currentToken()
+	t := this.currentToken()
+	re := regexp.MustCompile(`^(.+):(\d+)$`)
+	result := re.FindAllStringSubmatch(t, -1)
+	filePath := t
+	lineNumber := ""
+	if len(result) > 0 && len(result[0]) == 3 {
+		filePath = result[0][1]
+		lineNumber = result[0][2]
+	}
+	fileName := path.Base(filePath)
+	this.m["SourceFile"] = filePath
+	this.m["SourceName"] = fileName
+	this.m["SourceLineNumber"] = lineNumber
 }
 
 func (this *parser) do() error {
