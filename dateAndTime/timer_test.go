@@ -1,4 +1,4 @@
-package date_time
+package dateAndTime
 
 import "testing"
 import "time"
