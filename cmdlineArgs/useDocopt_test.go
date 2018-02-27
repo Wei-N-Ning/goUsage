@@ -72,7 +72,8 @@ func TestExpectCommandFB(t *testing.T) {
 		t.Fatal(err)
 	}
 	assertTrue(t, arguments["download"].(bool))
-	assertStringEqual(t, "koru", arguments["<configname>"].(string))
+	v, _ := arguments.String("<configname>")
+	assertStringEqual(t, "koru", v)
 }
 
 func TestExpectPositionalArgValue(t *testing.T) {
@@ -80,7 +81,11 @@ func TestExpectPositionalArgValue(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assertStringEqual(t, "asd", arguments["<name>"].([]string)[0])
+	if v, OK := arguments["<name>"]; !OK {
+		t.Fatal()
+	} else {
+		assertStringEqual(t, "asd", v.([]string)[0])
+	}
 }
 
 func TestExpectPositionalArgValueFB(t *testing.T) {
@@ -108,3 +113,7 @@ func TestExpectOptions(t *testing.T) {
 	v, _ := arguments["--totime"]
 	assertEqual(t, nil, v)
 }
+
+// !!!! have a read of the value casting rules and examples:
+// https://github.com/docopt/docopt.go#api
+
