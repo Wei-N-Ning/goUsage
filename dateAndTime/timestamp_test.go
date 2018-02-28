@@ -53,6 +53,8 @@ func TestGivenPartialTimeStringExpectDefaultFieldValues(t *testing.T) {
 		"2018-02-27 15:58:46": {2018, 2, 27, 15, 58, 46},
 		"2018-02-27 03:58:46 PM": {2018, 2, 27, 15, 58, 46},
 		"2018-02-27 18:58:46": {2018, 2, 27, 18, 58, 46},
+		"2018-02-27T15:58:46": {2018, 2, 27, 15, 58, 46},
+		"2018-02-27T18:58:46": {2018, 2, 27, 18, 58, 46},
 	}
 	for s, expected := range candiates {
 		tm, err := ConvertStringToTime(s)
@@ -61,6 +63,22 @@ func TestGivenPartialTimeStringExpectDefaultFieldValues(t *testing.T) {
 		}
 		actual := []int{tm.Year(), int(tm.Month()), tm.Day(), tm.Hour(), tm.Minute(), tm.Second()}
 		assertIntArrayEqual(t, expected, actual)
+	}
+}
+
+func TestExpectUnixLocalTime(t *testing.T) {
+	candiates := map[string]int{
+		"2018-02-27 11:54:44": 1519685684,
+		"2018-02-20 12:58:23": 1519084703,
+		"2018-01-02": 1514804400,
+	}
+	for s, expected := range candiates {
+		tm, err := ConvertStringToTime(s)
+		if err != nil {
+			t.Fatal(err)
+		}
+		actual := tm.Local().Unix()
+		assertIntEqual(t, expected, int(actual))
 	}
 }
 
