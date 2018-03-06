@@ -1,26 +1,23 @@
 package OOP
 
-import "math"
+import "strings"
 
-type PointI interface {
-	distanceTo(PointI) float64
+type GenereratorI interface{
+	Gen(s string) string
 }
 
-type VectorI interface {
-	length() float64
-	dotProduct(VectorI) float64
-	crossProduct(VectorI) VectorI
+type ToUpper struct {
+	value int
 }
 
-type Point struct {
-	x float64
-	y float64
-	z float64
+func (this *ToUpper) Gen(s string) string {
+	return strings.ToUpper(s)
 }
 
-func (p Point) distanceTo(other Point) float64 {
-	x := other.x - p.x
-	y := other.y - p.y
-	z := other.z - p.z
-	return math.Sqrt(x * x + y * y + z * z)
+type ToLower struct {
+	value int
+}
+
+func (this *ToLower) Gen(s string) string {
+	return strings.ToLower(s)
 }

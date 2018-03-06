@@ -2,24 +2,22 @@ package OOP
 
 import "testing"
 
-// TODO: use table based test case
-func TestPointExpectDistance(t *testing.T) {
-	p1 := Point{1.0, 0, 0}
-	p2 := Point{-1.0, 0, 0}
-	dist := p1.distanceTo(p2)
-	if 2.0 != dist {
-		t.Error(dist)
+func handle(g GenereratorI, s string) string {
+	return g.Gen(s)
+}
+
+func TestExpectUpper(t *testing.T) {
+	u := &ToUpper{}
+	s := handle(u, "asd")
+	if "ASD" != s {
+		t.Fatal()
 	}
 }
 
-
-func TestExpectNotRun(t *testing.T) {
-	type BadPoint struct {
-		x int
-		y int
-		z int
+func TestExpectLower(t *testing.T) {
+	u := &ToLower{}
+	s := handle(u, "ASd")
+	if "asd" != s {
+		t.Fatal()
 	}
-	//interface violation (IDE warning)
-	//badPoint := BadPoint{}
-	//p1 := Point{1.0, 0, 0}
 }
