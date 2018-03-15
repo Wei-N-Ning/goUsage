@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 	"bytes"
+	"io"
 )
 
 func TestReadFromCSV(t *testing.T) {
@@ -30,4 +31,27 @@ func TestWriteToCSV(t *testing.T) {
 	writer.Write(productLine)
 	writer.Flush()
 	assertStringEqual(t, "title,year,platform\ndune,1991,dos\n", buf.String())
+}
+
+func TestReadLinesInLoop(t *testing.T) {
+	const text = `
+title,year,platform,size
+dune,1991,dos,2mb
+doom,1993,dos,4mb
+`
+	str := strings.NewReader(text)
+	reader := csv.NewReader(str)
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			t.Fatal()
+		}
+		assertTrue(t, len(record) == 4)
+	}
+
+	// assert that EOF is reached
+	assertTrue(t, true)
 }
