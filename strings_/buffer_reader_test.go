@@ -1,12 +1,12 @@
 package strings_
 
 import (
-	"testing"
-	"fmt"
 	"bufio"
 	"bytes"
-	"strings"
+	"fmt"
 	"os"
+	"strings"
+	"testing"
 	"time"
 )
 
@@ -63,13 +63,13 @@ func drainSimulatedStdin(output chan string, s string) {
 func drink(ch chan string, t *testing.T) {
 	for {
 		select {
-		case s, ok := <- ch:
+		case s, ok := <-ch:
 			if !ok {
 				return
 			} else {
 				t.Logf("read from stdin: %s", s)
 			}
-		case <- time.After(time.Second * 1):
+		case <-time.After(time.Second * 1):
 		}
 	}
 }
